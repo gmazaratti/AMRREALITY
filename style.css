@@ -584,6 +584,15 @@ body::before {
   letter-spacing:0.02em;
 }
 
+.mission-block__emphasis {
+  font-family: var(--font-body);
+  font-weight:300;
+  font-size: clamp(0.85rem, 1.6vw, 0.95rem);
+  color: var(--text);
+  letter-spacing:0.15em;
+  margin-top:0.8rem;
+}
+
 .mission-cta {
   text-align:center;
   padding: 3rem 2rem 5rem;
