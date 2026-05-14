@@ -4,6 +4,20 @@ All notable changes to this project will be documented here.
 
 ---
 
+## v1.1.0 — SEO, Favicon, Privacy & Terms, Vercel Deployment
+
+- Full SEO optimization (Open Graph, Twitter Cards, structured data, canonical URLs)
+- Favicon added (cross logo)
+- Privacy Policy page (`/privacy.html`)
+- Terms of Service page (`/terms.html`)
+- `robots.txt` and `sitemap.xml` for search engines
+- All footer links now point to real legal pages
+- Robots changed from `noindex` to `index, follow`
+- Deployed to Vercel with GitHub auto-deploy
+- All canonical URLs set for `amrreality.com`
+
+---
+
 ## v1.0.0 — Landing Page, Countdown, Mission Page, Waitlist
 
 **Initial release.**

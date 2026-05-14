@@ -619,6 +619,103 @@ body::before {
   color: var(--bg);
 }
 
+/* ════════════════════════════════
+   LEGAL PAGES (Privacy / Terms)
+   ════════════════════════════════ */
+.legal {
+  padding: 8rem 2rem 4rem;
+  opacity:0; animation: fadeSlideUp 1s var(--ease) 0.3s forwards;
+}
+
+.legal__inner {
+  max-width:720px;
+  margin:0 auto;
+}
+
+.legal__label {
+  font-family: var(--font-ui);
+  font-weight:400;
+  font-size:0.6rem;
+  letter-spacing:0.4em;
+  text-transform:uppercase;
+  color: var(--gold);
+  margin-bottom:1rem;
+}
+
+.legal__title {
+  font-family: var(--font-body);
+  font-weight:200;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing:0.25em;
+  text-transform:uppercase;
+  margin-bottom:0.5rem;
+}
+
+.legal__updated {
+  font-family: var(--font-ui);
+  font-weight:300;
+  font-size:0.65rem;
+  color: var(--text-muted);
+  letter-spacing:0.1em;
+  margin-bottom:3rem;
+}
+
+.legal__body h2 {
+  font-family: var(--font-body);
+  font-weight:400;
+  font-size:0.95rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  margin-top:2.5rem;
+  margin-bottom:0.8rem;
+}
+
+.legal__body h3 {
+  font-family: var(--font-ui);
+  font-weight:500;
+  font-size:0.8rem;
+  letter-spacing:0.08em;
+  color: var(--text-sec);
+  margin-top:1.5rem;
+  margin-bottom:0.5rem;
+}
+
+.legal__body p {
+  font-family: var(--font-ui);
+  font-weight:300;
+  font-size:0.82rem;
+  color: var(--text-sec);
+  line-height:1.8;
+  letter-spacing:0.02em;
+  margin-bottom:1rem;
+}
+
+.legal__body ul {
+  list-style:none;
+  padding:0;
+  margin: 0.5rem 0 1.2rem;
+}
+
+.legal__body li {
+  font-family: var(--font-ui);
+  font-weight:300;
+  font-size:0.8rem;
+  color: var(--text-sec);
+  line-height:1.8;
+  padding-left:1.2rem;
+  position:relative;
+}
+
+.legal__body li::before {
+  content:'';
+  position:absolute;
+  left:0; top:0.65em;
+  width:4px; height:4px;
+  border-radius:50%;
+  background: var(--gold);
+  opacity:0.5;
+}
+
 /* ── Animations ── */
 @keyframes fadeSlideUp {
   from { opacity:0; transform:translateY(20px); }
