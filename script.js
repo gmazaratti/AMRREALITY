@@ -1,0 +1,128 @@
+(function () {
+  'use strict';
+
+  // ── Config ─────────────────────────────────
+  const TARGET_DATE = new Date('2026-06-15T00:00:00Z');
+
+  // ── Random background ─────────────────────
+  const backgrounds = ['bg.png', 'bg2.png'];
+  const hero = document.getElementById('hero');
+  if (hero) {
+    const pick = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    hero.style.backgroundImage = `url('${pick}')`;
+  }
+
+  // ── Build digit slots ──────────────────────
+  // Creates two digit-slot elements (tens and ones) inside a container
+  function buildDigitSlots(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return [];
+
+    const slots = [];
+    for (let pos = 0; pos < 2; pos++) {
+      const slot = document.createElement('div');
+      slot.className = 'digit-slot';
+
+      const strip = document.createElement('div');
+      strip.className = 'digit-strip';
+
+      for (let d = 0; d <= 9; d++) {
+        const span = document.createElement('span');
+        span.textContent = d;
+        strip.appendChild(span);
+      }
+
+      slot.appendChild(strip);
+      container.appendChild(slot);
+      slots.push(strip);
+    }
+    return slots;
+  }
+
+  // Build all digit strips
+  const strips = {
+    days:    buildDigitSlots('cd-days'),
+    hours:   buildDigitSlots('cd-hours'),
+    minutes: buildDigitSlots('cd-minutes'),
+    seconds: buildDigitSlots('cd-seconds'),
+  };
+
+  // ── Get digit height ───────────────────────
+  function getDigitHeight() {
+    const slot = document.querySelector('.digit-slot');
+    if (!slot) return 60;
+    return slot.offsetHeight;
+  }
+
+  // ── Set a digit strip to a value ───────────
+  function setDigit(strip, digit, immediate) {
+    const h = getDigitHeight();
+    if (immediate) {
+      strip.style.transition = 'none';
+    } else {
+      strip.style.transition = 'transform 0.9s cubic-bezier(0.22, 0.68, 0, 1)';
+    }
+    strip.style.transform = `translateY(-${digit * h}px)`;
+  }
+
+  // ── Set a two-digit value ──────────────────
+  function setValue(key, value, immediate) {
+    const tens = Math.floor(value / 10) % 10;
+    const ones = value % 10;
+    if (strips[key] && strips[key].length === 2) {
+      setDigit(strips[key][0], tens, immediate);
+      setDigit(strips[key][1], ones, immediate);
+    }
+  }
+
+  // ── Previous values for change detection ───
+  const prev = { days: -1, hours: -1, minutes: -1, seconds: -1 };
+
+  // ── Update countdown ──────────────────────
+  function updateCountdown(immediate) {
+    const diff = Math.max(0, TARGET_DATE.getTime() - Date.now());
+
+    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const m = Math.floor((diff / (1000 * 60)) % 60);
+    const s = Math.floor((diff / 1000) % 60);
+
+    const vals = { days: d, hours: h, minutes: m, seconds: s };
+
+    for (const key of Object.keys(vals)) {
+      if (vals[key] !== prev[key] || immediate) {
+        setValue(key, vals[key], immediate);
+        prev[key] = vals[key];
+      }
+    }
+  }
+
+  // ── Waitlist form ──────────────────────────
+  const form = document.getElementById('waitlist-form');
+  const successMsg = document.getElementById('waitlist-success');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const email = document.getElementById('waitlist-email');
+      if (email && email.value) {
+        form.style.display = 'none';
+        if (successMsg) successMsg.classList.add('visible');
+      }
+    });
+  }
+
+  // ── Init ───────────────────────────────────
+  // Set initial values immediately (no transition)
+  requestAnimationFrame(function () {
+    updateCountdown(true);
+    // After initial set, force reflow then enable transitions
+    setTimeout(function () {
+      updateCountdown(false);
+    }, 50);
+  });
+
+  setInterval(function () {
+    updateCountdown(false);
+  }, 1000);
+
+})();
