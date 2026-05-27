@@ -4,6 +4,21 @@ All notable changes to this project will be documented here.
 
 ---
 
+## v1.2.0 — Shop Page, Mobile Bottom Nav, Contact Dropdown, Modeling Page
+
+- Shop page with 8 vintage clothing products in a 2-column grid
+- Category filter bar (All, Tees, Hoodies, Outerwear, Bottoms)
+- Product cards with sharp corners, hover zoom, and badges (New/Limited)
+- Contact dropdown in navbar (Contact Us + Model With Us)
+- Modeling application page with professional form
+- Mobile bottom navigation bar (Home, Shop, Search, Cart, Account)
+- Hamburger menu for tablet-size screens
+- Mobile responsive fixes (iOS bg-attachment, hero sizing, countdown scaling)
+- Shared `nav.js` for dropdown/hamburger logic across pages
+- 6 AI-generated product images in `/products/`
+
+---
+
 ## v1.1.0 — SEO, Favicon, Privacy & Terms, Vercel Deployment
 
 - Full SEO optimization (Open Graph, Twitter Cards, structured data, canonical URLs)

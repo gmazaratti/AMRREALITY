@@ -58,11 +58,23 @@
   <!-- ═══ NAVBAR ═══ -->
   <nav class="navbar" id="navbar">
     <a href="index.html" class="navbar__brand">AMR Reality</a>
-    <ul class="navbar__links">
+    <button class="navbar__hamburger" id="nav-toggle" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar__links" id="nav-menu">
       <li><a href="index.html">Reality</a></li>
       <li><a href="mission.html">Our Mission</a></li>
+      <li><a href="shop.html">Shop</a></li>
       <li><a href="#waitlist">Waitlist</a></li>
-      <li><a href="#footer">Contact</a></li>
+      <li class="navbar__dropdown" id="contact-dropdown">
+        <button class="navbar__dropdown-toggle" aria-expanded="false">
+          Contact <span class="navbar__dropdown-icon"></span>
+        </button>
+        <div class="navbar__dropdown-menu">
+          <a href="#footer">Contact Us</a>
+          <a href="modeling.html">Model With Us</a>
+        </div>
+      </li>
     </ul>
   </nav>
 
