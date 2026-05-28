@@ -213,8 +213,9 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <span>Search</span>
     </button>
-    <a href="shop.html" class="mobile-nav__item">
+    <a href="#" class="mobile-nav__item" data-open-cart>
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+      <span class="cart-badge" style="display:none">0</span>
       <span>Cart</span>
     </a>
     <a href="mission.html" class="mobile-nav__item">
@@ -257,16 +258,42 @@
   <div class="product-overlay" id="product-overlay">
     <button class="product-overlay__close" id="overlay-close" aria-label="Close">&times;</button>
     <div class="product-overlay__inner">
-      <div class="product-overlay__image">
-        <img id="overlay-img" src="" alt="" />
+
+      <!-- Left: Thumbnails + Main Image -->
+      <div class="product-overlay__gallery">
+        <div class="product-overlay__thumbs" id="overlay-thumbs">
+          <!-- Thumbnails injected by JS -->
+        </div>
+        <div class="product-overlay__image">
+          <img id="overlay-img" src="" alt="" />
+        </div>
       </div>
+
+      <!-- Right: Details -->
       <div class="product-overlay__details">
         <p class="product-overlay__category" id="overlay-category"></p>
         <h2 class="product-overlay__name" id="overlay-name"></h2>
+
+        <!-- Star rating -->
+        <div class="product-overlay__rating" id="overlay-rating">
+          <div class="product-overlay__stars">
+            <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27 5.23 15.71l.91-5.32L2.27 6.62l5.34-.78z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27 5.23 15.71l.91-5.32L2.27 6.62l5.34-.78z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27 5.23 15.71l.91-5.32L2.27 6.62l5.34-.78z"/></svg>
+            <svg viewBox="0 0 20 20"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27 5.23 15.71l.91-5.32L2.27 6.62l5.34-.78z"/></svg>
+            <svg viewBox="0 0 20 20" class="star-half"><path d="M10 1l2.39 4.84 5.34.78-3.87 3.77.91 5.32L10 13.27 5.23 15.71l.91-5.32L2.27 6.62l5.34-.78z"/></svg>
+          </div>
+          <span class="product-overlay__review-count">(24)</span>
+        </div>
+
         <p class="product-overlay__price" id="overlay-price"></p>
 
+        <!-- Size selector -->
         <div class="product-overlay__sizes">
-          <p class="product-overlay__sizes-label">Size</p>
+          <div class="product-overlay__sizes-header">
+            <p class="product-overlay__sizes-label">Size</p>
+            <a href="#" class="product-overlay__size-guide">Size Guide</a>
+          </div>
           <div class="product-overlay__sizes-grid">
             <button class="product-overlay__size-btn" data-size="S">S</button>
             <button class="product-overlay__size-btn selected" data-size="M">M</button>
@@ -276,21 +303,241 @@
           </div>
         </div>
 
+        <!-- Quantity -->
+        <div class="product-overlay__quantity">
+          <p class="product-overlay__qty-label">Quantity</p>
+          <div class="product-overlay__qty-control">
+            <button class="product-overlay__qty-btn" id="qty-minus">&minus;</button>
+            <span class="product-overlay__qty-value" id="qty-value">1</span>
+            <button class="product-overlay__qty-btn" id="qty-plus">+</button>
+          </div>
+        </div>
+
+        <!-- Actions -->
         <div class="product-overlay__actions">
-          <button class="product-overlay__add-cart">Add to Cart</button>
+          <button class="product-overlay__add-cart" id="add-to-cart-btn">Add to Cart</button>
           <button class="product-overlay__buy-now">Buy Now</button>
         </div>
 
-        <div class="product-overlay__desc">
-          <p>Premium quality garment from the AMR Reality collection. Designed in Montreal, crafted with intention. Limited availability — each piece is part of a numbered production run.</p>
+        <!-- Accordion sections -->
+        <div class="product-overlay__accordions">
+          <div class="po-accordion">
+            <button class="po-accordion__toggle">
+              <span>Details</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="po-accordion__content">
+              <ul>
+                <li>100% Premium Cotton</li>
+                <li>Oversized relaxed fit</li>
+                <li>Screen-printed graphics</li>
+                <li>Reinforced stitching</li>
+                <li>Pre-washed for softness</li>
+                <li>Designed in Montreal, QC</li>
+              </ul>
+              <p>Product ID: AMR-RBA-0714</p>
+            </div>
+          </div>
+
+          <div class="po-accordion">
+            <button class="po-accordion__toggle">
+              <span>Delivery &amp; Returns</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="po-accordion__content">
+              <p><strong>Free shipping</strong> on orders over $120 CAD.</p>
+              <p>Standard delivery: 5–8 business days.</p>
+              <p>Express delivery: 2–3 business days ($15 CAD).</p>
+              <p>Hassle-free returns within 14 days of delivery. Items must be unworn with tags attached.</p>
+            </div>
+          </div>
+
+          <div class="po-accordion">
+            <button class="po-accordion__toggle">
+              <span>Reviews</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="po-accordion__content">
+              <div class="po-review">
+                <div class="po-review__stars">★★★★★</div>
+                <p class="po-review__text">"Best quality tee I've ever owned. The fit is perfect."</p>
+                <p class="po-review__author">— Marcus T.</p>
+              </div>
+              <div class="po-review">
+                <div class="po-review__stars">★★★★★</div>
+                <p class="po-review__text">"Looks even better in person. Heavyweight fabric, clean printing."</p>
+                <p class="po-review__author">— Priya K.</p>
+              </div>
+              <div class="po-review">
+                <div class="po-review__stars">★★★★☆</div>
+                <p class="po-review__text">"Love the design. Runs slightly large — size down if between sizes."</p>
+                <p class="po-review__author">— Jordan L.</p>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   </div>
 
+  <!-- ═══ CART DRAWER ═══ -->
+  <div class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer__header">
+      <h3 class="cart-drawer__title">Your Cart</h3>
+      <button class="cart-drawer__close" id="cart-close">&times;</button>
+    </div>
+    <div class="cart-drawer__items" id="cart-items">
+      <!-- Cart items injected by JS -->
+    </div>
+    <div class="cart-drawer__footer" id="cart-footer">
+      <div class="cart-drawer__total">
+        <span>Total</span>
+        <span id="cart-total">$0</span>
+      </div>
+      <button class="cart-drawer__checkout">Checkout</button>
+    </div>
+  </div>
+  <div class="cart-drawer__backdrop" id="cart-backdrop"></div>
+
   <script>
   (function () {
-    // ── Category filter ──
+    // ═══════════════════════════════
+    //  CART SYSTEM (localStorage)
+    // ═══════════════════════════════
+    var cart = JSON.parse(localStorage.getItem('amr_cart') || '[]');
+
+    function saveCart() {
+      localStorage.setItem('amr_cart', JSON.stringify(cart));
+      updateCartBadges();
+      renderCartDrawer();
+    }
+
+    function getCartCount() {
+      return cart.reduce(function(sum, item) { return sum + item.qty; }, 0);
+    }
+
+    function getCartTotal() {
+      return cart.reduce(function(sum, item) { return sum + (item.price * item.qty); }, 0);
+    }
+
+    function updateCartBadges() {
+      var count = getCartCount();
+      var badges = document.querySelectorAll('.cart-badge');
+      badges.forEach(function(b) {
+        b.textContent = count;
+        b.style.display = count > 0 ? 'flex' : 'none';
+      });
+    }
+
+    function addToCart(name, price, size, qty, imgSrc) {
+      // Check for existing item with same name+size
+      var existing = cart.find(function(item) {
+        return item.name === name && item.size === size;
+      });
+      if (existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({ name: name, price: price, size: size, qty: qty, img: imgSrc });
+      }
+      saveCart();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      saveCart();
+    }
+
+    function changeCartQty(index, delta) {
+      cart[index].qty += delta;
+      if (cart[index].qty <= 0) cart.splice(index, 1);
+      saveCart();
+    }
+
+    // ── Cart drawer ──
+    var cartDrawer = document.getElementById('cart-drawer');
+    var cartBackdrop = document.getElementById('cart-backdrop');
+    var cartItemsEl = document.getElementById('cart-items');
+    var cartTotalEl = document.getElementById('cart-total');
+    var cartFooter = document.getElementById('cart-footer');
+
+    function openCartDrawer() {
+      cartDrawer.classList.add('open');
+      cartBackdrop.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCartDrawer() {
+      cartDrawer.classList.remove('open');
+      cartBackdrop.classList.remove('open');
+      if (!document.getElementById('product-overlay').classList.contains('active')) {
+        document.body.style.overflow = '';
+      }
+    }
+
+    document.getElementById('cart-close').addEventListener('click', closeCartDrawer);
+    cartBackdrop.addEventListener('click', closeCartDrawer);
+
+    // Cart link clicks
+    document.querySelectorAll('[data-open-cart]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        openCartDrawer();
+      });
+    });
+
+    function renderCartDrawer() {
+      if (!cartItemsEl) return;
+      if (cart.length === 0) {
+        cartItemsEl.innerHTML = '<p class="cart-drawer__empty">Your cart is empty</p>';
+        cartFooter.style.display = 'none';
+        return;
+      }
+      cartFooter.style.display = '';
+      var html = '';
+      cart.forEach(function(item, i) {
+        html += '<div class="cart-item">' +
+          '<img src="' + item.img + '" alt="' + item.name + '" class="cart-item__img" />' +
+          '<div class="cart-item__info">' +
+            '<p class="cart-item__name">' + item.name + '</p>' +
+            '<p class="cart-item__meta">Size: ' + item.size + '</p>' +
+            '<p class="cart-item__price">$' + item.price + '</p>' +
+          '</div>' +
+          '<div class="cart-item__controls">' +
+            '<div class="cart-item__qty">' +
+              '<button class="cart-item__qty-btn" data-action="minus" data-index="' + i + '">&minus;</button>' +
+              '<span>' + item.qty + '</span>' +
+              '<button class="cart-item__qty-btn" data-action="plus" data-index="' + i + '">+</button>' +
+            '</div>' +
+            '<button class="cart-item__remove" data-index="' + i + '">Remove</button>' +
+          '</div>' +
+        '</div>';
+      });
+      cartItemsEl.innerHTML = html;
+      cartTotalEl.textContent = '$' + getCartTotal();
+
+      // Bind events
+      cartItemsEl.querySelectorAll('.cart-item__qty-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          var idx = parseInt(btn.getAttribute('data-index'));
+          var delta = btn.getAttribute('data-action') === 'plus' ? 1 : -1;
+          changeCartQty(idx, delta);
+        });
+      });
+      cartItemsEl.querySelectorAll('.cart-item__remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          removeFromCart(parseInt(btn.getAttribute('data-index')));
+        });
+      });
+    }
+
+    // Init badges
+    updateCartBadges();
+    renderCartDrawer();
+
+    // ═══════════════════════════════
+    //  CATEGORY FILTER
+    // ═══════════════════════════════
     var btns = document.querySelectorAll('.shop-filter__btn');
     var cards = document.querySelectorAll('.product-card');
     btns.forEach(function (btn) {
@@ -308,20 +555,20 @@
       });
     });
 
-    // ── Product overlay ──
+    // ═══════════════════════════════
+    //  PRODUCT OVERLAY
+    // ═══════════════════════════════
     var overlay = document.getElementById('product-overlay');
     var overlayImg = document.getElementById('overlay-img');
     var overlayName = document.getElementById('overlay-name');
     var overlayPrice = document.getElementById('overlay-price');
     var overlayCat = document.getElementById('overlay-category');
+    var overlayThumbs = document.getElementById('overlay-thumbs');
     var closeBtn = document.getElementById('overlay-close');
+    var qtyValue = document.getElementById('qty-value');
+    var currentQty = 1;
 
-    var catLabels = {
-      tees: 'Tees',
-      hoodies: 'Hoodies',
-      outerwear: 'Outerwear',
-      bottoms: 'Bottoms'
-    };
+    var catLabels = { tees:'Tees', hoodies:'Hoodies', outerwear:'Outerwear', bottoms:'Bottoms' };
 
     cards.forEach(function (card) {
       card.addEventListener('click', function () {
@@ -335,6 +582,36 @@
         if (overlayPrice && price) overlayPrice.textContent = price.textContent;
         if (overlayCat) overlayCat.textContent = catLabels[cat] || cat;
 
+        // Build thumbnails
+        overlayThumbs.innerHTML = '';
+        for (var t = 0; t < 5; t++) {
+          var thumb = document.createElement('div');
+          thumb.className = 'product-overlay__thumb' + (t === 0 ? ' active' : '');
+          var tImg = document.createElement('img');
+          tImg.src = img.src;
+          tImg.alt = 'View ' + (t + 1);
+          thumb.appendChild(tImg);
+          thumb.addEventListener('click', (function(el) {
+            return function() {
+              overlayThumbs.querySelectorAll('.product-overlay__thumb').forEach(function(th) { th.classList.remove('active'); });
+              el.classList.add('active');
+            };
+          })(thumb));
+          overlayThumbs.appendChild(thumb);
+        }
+
+        // Reset quantity
+        currentQty = 1;
+        qtyValue.textContent = '1';
+
+        // Reset size selection
+        var sizeBtns = document.querySelectorAll('.product-overlay__size-btn');
+        sizeBtns.forEach(function(b) { b.classList.remove('selected'); });
+        sizeBtns[1].classList.add('selected'); // default M
+
+        // Close all accordions
+        document.querySelectorAll('.po-accordion').forEach(function(a) { a.classList.remove('open'); });
+
         overlayImg.style.animation = 'none';
         void overlayImg.offsetHeight;
         overlayImg.style.animation = '';
@@ -344,26 +621,65 @@
       });
     });
 
+    // Close overlay
     function closeOverlay() {
       overlay.classList.remove('active');
       document.body.style.overflow = '';
     }
-
     closeBtn.addEventListener('click', closeOverlay);
-    overlay.addEventListener('click', function (e) {
-      if (e.target === overlay) closeOverlay();
-    });
+    overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay(); });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay();
     });
 
-    var sizeBtns = document.querySelectorAll('.product-overlay__size-btn');
-    sizeBtns.forEach(function (btn) {
+    // Size selection
+    document.querySelectorAll('.product-overlay__size-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        sizeBtns.forEach(function (b) { b.classList.remove('selected'); });
+        document.querySelectorAll('.product-overlay__size-btn').forEach(function (b) { b.classList.remove('selected'); });
         btn.classList.add('selected');
       });
     });
+
+    // Quantity
+    document.getElementById('qty-minus').addEventListener('click', function() {
+      if (currentQty > 1) { currentQty--; qtyValue.textContent = currentQty; }
+    });
+    document.getElementById('qty-plus').addEventListener('click', function() {
+      currentQty++;
+      qtyValue.textContent = currentQty;
+    });
+
+    // Add to cart
+    document.getElementById('add-to-cart-btn').addEventListener('click', function() {
+      var name = overlayName.textContent;
+      var priceStr = overlayPrice.textContent.replace('$', '');
+      var price = parseInt(priceStr) || 0;
+      var selectedSize = document.querySelector('.product-overlay__size-btn.selected');
+      var size = selectedSize ? selectedSize.getAttribute('data-size') : 'M';
+      var imgSrc = overlayImg.src;
+
+      addToCart(name, price, size, currentQty, imgSrc);
+
+      // Brief success feedback
+      var btn = document.getElementById('add-to-cart-btn');
+      btn.textContent = 'Added ✓';
+      btn.style.background = 'var(--gold)';
+      btn.style.color = 'var(--bg)';
+      setTimeout(function() {
+        btn.textContent = 'Add to Cart';
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 1200);
+    });
+
+    // Accordion toggles
+    document.querySelectorAll('.po-accordion__toggle').forEach(function(toggle) {
+      toggle.addEventListener('click', function() {
+        var parent = toggle.parentElement;
+        parent.classList.toggle('open');
+      });
+    });
+
   })();
   </script>
 
