@@ -252,9 +252,45 @@
   </footer>
 
   <script src="nav.js"></script>
+
+  <!-- ═══ PRODUCT DETAIL OVERLAY ═══ -->
+  <div class="product-overlay" id="product-overlay">
+    <button class="product-overlay__close" id="overlay-close" aria-label="Close">&times;</button>
+    <div class="product-overlay__inner">
+      <div class="product-overlay__image">
+        <img id="overlay-img" src="" alt="" />
+      </div>
+      <div class="product-overlay__details">
+        <p class="product-overlay__category" id="overlay-category"></p>
+        <h2 class="product-overlay__name" id="overlay-name"></h2>
+        <p class="product-overlay__price" id="overlay-price"></p>
+
+        <div class="product-overlay__sizes">
+          <p class="product-overlay__sizes-label">Size</p>
+          <div class="product-overlay__sizes-grid">
+            <button class="product-overlay__size-btn" data-size="S">S</button>
+            <button class="product-overlay__size-btn selected" data-size="M">M</button>
+            <button class="product-overlay__size-btn" data-size="L">L</button>
+            <button class="product-overlay__size-btn" data-size="XL">XL</button>
+            <button class="product-overlay__size-btn" data-size="2XL">2XL</button>
+          </div>
+        </div>
+
+        <div class="product-overlay__actions">
+          <button class="product-overlay__add-cart">Add to Cart</button>
+          <button class="product-overlay__buy-now">Buy Now</button>
+        </div>
+
+        <div class="product-overlay__desc">
+          <p>Premium quality garment from the AMR Reality collection. Designed in Montreal, crafted with intention. Limited availability — each piece is part of a numbered production run.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
   (function () {
-    // Category filter
+    // ── Category filter ──
     var btns = document.querySelectorAll('.shop-filter__btn');
     var cards = document.querySelectorAll('.product-card');
     btns.forEach(function (btn) {
@@ -269,6 +305,63 @@
             card.style.display = 'none';
           }
         });
+      });
+    });
+
+    // ── Product overlay ──
+    var overlay = document.getElementById('product-overlay');
+    var overlayImg = document.getElementById('overlay-img');
+    var overlayName = document.getElementById('overlay-name');
+    var overlayPrice = document.getElementById('overlay-price');
+    var overlayCat = document.getElementById('overlay-category');
+    var closeBtn = document.getElementById('overlay-close');
+
+    var catLabels = {
+      tees: 'Tees',
+      hoodies: 'Hoodies',
+      outerwear: 'Outerwear',
+      bottoms: 'Bottoms'
+    };
+
+    cards.forEach(function (card) {
+      card.addEventListener('click', function () {
+        var img = card.querySelector('.product-card__img img');
+        var name = card.querySelector('.product-card__name');
+        var price = card.querySelector('.product-card__price');
+        var cat = card.getAttribute('data-category');
+
+        if (overlayImg && img) { overlayImg.src = img.src; overlayImg.alt = img.alt; }
+        if (overlayName && name) overlayName.textContent = name.textContent;
+        if (overlayPrice && price) overlayPrice.textContent = price.textContent;
+        if (overlayCat) overlayCat.textContent = catLabels[cat] || cat;
+
+        overlayImg.style.animation = 'none';
+        void overlayImg.offsetHeight;
+        overlayImg.style.animation = '';
+
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+    });
+
+    function closeOverlay() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeOverlay);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeOverlay();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) closeOverlay();
+    });
+
+    var sizeBtns = document.querySelectorAll('.product-overlay__size-btn');
+    sizeBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        sizeBtns.forEach(function (b) { b.classList.remove('selected'); });
+        btn.classList.add('selected');
       });
     });
   })();

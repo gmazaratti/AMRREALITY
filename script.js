@@ -13,7 +13,6 @@
   }
 
   // ── Build digit slots ──────────────────────
-  // Creates two digit-slot elements (tens and ones) inside a container
   function buildDigitSlots(containerId) {
     const container = document.getElementById(containerId);
     if (!container) return [];
@@ -34,7 +33,7 @@
 
       slot.appendChild(strip);
       container.appendChild(slot);
-      slots.push(strip);
+      slots.push({ strip: strip, slot: slot, lastDigit: -1 });
     }
     return slots;
   }
@@ -47,28 +46,35 @@
     seconds: buildDigitSlots('cd-seconds'),
   };
 
-  // ── Get digit height ───────────────────────
-  function getDigitHeight() {
-    const slot = document.querySelector('.digit-slot');
-    if (!slot) return 60;
-    return slot.offsetHeight;
+  // ── Get digit height from actual slot element ──
+  function getDigitHeight(slotEl) {
+    if (!slotEl) return 60;
+    var h = slotEl.offsetHeight;
+    if (h <= 0) {
+      // Fallback: parse computed CSS variable
+      var style = getComputedStyle(document.documentElement);
+      var raw = style.getPropertyValue('--digit-h').trim();
+      h = parseFloat(raw) || 60;
+    }
+    return h;
   }
 
   // ── Set a digit strip to a value ───────────
-  function setDigit(strip, digit, immediate) {
-    const h = getDigitHeight();
+  function setDigit(entry, digit, immediate) {
+    var h = getDigitHeight(entry.slot);
     if (immediate) {
-      strip.style.transition = 'none';
+      entry.strip.style.transition = 'none';
     } else {
-      strip.style.transition = 'transform 0.9s cubic-bezier(0.22, 0.68, 0, 1)';
+      entry.strip.style.transition = 'transform 0.9s cubic-bezier(0.22, 0.68, 0, 1)';
     }
-    strip.style.transform = `translateY(-${digit * h}px)`;
+    entry.strip.style.transform = 'translateY(-' + (digit * h) + 'px)';
+    entry.lastDigit = digit;
   }
 
   // ── Set a two-digit value ──────────────────
   function setValue(key, value, immediate) {
-    const tens = Math.floor(value / 10) % 10;
-    const ones = value % 10;
+    var tens = Math.floor(value / 10) % 10;
+    var ones = value % 10;
     if (strips[key] && strips[key].length === 2) {
       setDigit(strips[key][0], tens, immediate);
       setDigit(strips[key][1], ones, immediate);
@@ -97,6 +103,21 @@
     }
   }
 
+  // ── Recalculate positions (after resize / tab switch) ──
+  function recalcPositions() {
+    for (const key of Object.keys(strips)) {
+      if (strips[key] && strips[key].length === 2) {
+        strips[key].forEach(function (entry) {
+          if (entry.lastDigit >= 0) {
+            var h = getDigitHeight(entry.slot);
+            entry.strip.style.transition = 'none';
+            entry.strip.style.transform = 'translateY(-' + (entry.lastDigit * h) + 'px)';
+          }
+        });
+      }
+    }
+  }
+
   // ── Waitlist form ──────────────────────────
   const form = document.getElementById('waitlist-form');
   const successMsg = document.getElementById('waitlist-success');
@@ -112,10 +133,8 @@
   }
 
   // ── Init ───────────────────────────────────
-  // Set initial values immediately (no transition)
   requestAnimationFrame(function () {
     updateCountdown(true);
-    // After initial set, force reflow then enable transitions
     setTimeout(function () {
       updateCountdown(false);
     }, 50);
@@ -125,6 +144,27 @@
     updateCountdown(false);
   }, 1000);
 
+  // ── Handle tab visibility change ──────────
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) {
+      requestAnimationFrame(function () {
+        recalcPositions();
+        setTimeout(function () {
+          updateCountdown(false);
+        }, 50);
+      });
+    }
+  });
+
+  // ── Handle resize ─────────────────────────
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      recalcPositions();
+    }, 150);
+  });
+
   // ── Hamburger menu ─────────────────────────
   var navToggle = document.getElementById('nav-toggle');
   var navMenu = document.getElementById('nav-menu');
@@ -133,7 +173,6 @@
       navToggle.classList.toggle('open');
       navMenu.classList.toggle('open');
     });
-    // Close menu when a link is clicked
     navMenu.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
         navToggle.classList.remove('open');
