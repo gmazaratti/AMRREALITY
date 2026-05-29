@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin — AMR Reality</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+  <!-- ═══ TOAST CONTAINER ═══ -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- ═══ LOGIN SCREEN ═══ -->
+  <div class="login-screen" id="login-screen">
+    <div class="login-card">
+      <h1 class="login-card__brand">AMR Reality</h1>
+      <p class="login-card__sub">Admin Panel</p>
+      <form id="login-form">
+        <div class="login-card__field">
+          <label class="login-card__label" for="login-email">Email</label>
+          <input class="login-card__input" id="login-email" type="email" autocomplete="email" required />
+        </div>
+        <div class="login-card__field">
+          <label class="login-card__label" for="login-password">Password</label>
+          <input class="login-card__input" id="login-password" type="password" autocomplete="current-password" required />
+        </div>
+        <button class="login-card__btn" type="submit" id="login-btn">Sign In</button>
+        <p class="login-card__error" id="login-error"></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══ ADMIN APP ═══ -->
+  <div class="admin-app" id="admin-app">
+
+    <!-- Top bar -->
+    <header class="admin-topbar">
+      <div>
+        <span class="admin-topbar__brand">AMR Reality</span>
+        <span class="admin-topbar__badge">Admin</span>
+      </div>
+      <div class="admin-topbar__actions">
+        <span class="admin-topbar__user" id="admin-user-email"></span>
+        <button class="admin-topbar__logout" id="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <!-- Stats -->
+    <div class="admin-stats" id="admin-stats">
+      <div class="admin-stat">
+        <div class="admin-stat__value" id="stat-total">0</div>
+        <div class="admin-stat__label">Total Products</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat__value" id="stat-active">0</div>
+        <div class="admin-stat__label">Active</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat__value" id="stat-soldout">0</div>
+        <div class="admin-stat__label">Sold Out</div>
+      </div>
+      <div class="admin-stat">
+        <div class="admin-stat__value" id="stat-categories">0</div>
+        <div class="admin-stat__label">Categories</div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="admin-content">
+      <div class="admin-content__header">
+        <h2 class="admin-content__title">Products</h2>
+        <div class="admin-content__search">
+          <input class="admin-search-input" id="product-search" type="text" placeholder="Search products..." />
+          <button class="btn btn--gold" id="add-product-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Product
+          </button>
+        </div>
+      </div>
+
+      <table class="product-table" id="product-table">
+        <thead>
+          <tr>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Status</th>
+            <th>Badge</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="product-tbody">
+          <!-- Rendered by JS -->
+        </tbody>
+      </table>
+
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-state__icon">📦</div>
+        <p class="empty-state__text">No products yet. Add your first product to get started.</p>
+        <button class="btn btn--gold" id="add-product-btn-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Add Product
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PRODUCT EDITOR MODAL ═══ -->
+  <div class="modal-backdrop" id="modal-backdrop"></div>
+  <div class="modal" id="product-modal">
+    <div class="modal__header">
+      <h3 class="modal__title" id="modal-title">Add Product</h3>
+      <button class="modal__close" id="modal-close">&times;</button>
+    </div>
+    <div class="modal__body" id="modal-body">
+
+      <!-- Name + Slug -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-name">Product Name</label>
+          <input class="form-input" id="p-name" type="text" placeholder="e.g. RBA Jersey Tee" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-slug">Slug</label>
+          <input class="form-input" id="p-slug" type="text" placeholder="auto-generated" />
+        </div>
+      </div>
+
+      <!-- Category + Badge -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-category">Category</label>
+          <select class="form-select" id="p-category">
+            <option value="tees">Tees</option>
+            <option value="hoodies">Hoodies</option>
+            <option value="outerwear">Outerwear</option>
+            <option value="bottoms">Bottoms</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Badge</label>
+          <div class="badge-grid" id="p-badge-grid">
+            <label class="badge-option">
+              <input type="radio" name="p-badge" value="" checked />
+              <span class="badge-option__label">None</span>
+            </label>
+            <label class="badge-option">
+              <input type="radio" name="p-badge" value="New" />
+              <span class="badge-option__label">New</span>
+            </label>
+            <label class="badge-option">
+              <input type="radio" name="p-badge" value="Limited" />
+              <span class="badge-option__label">Limited</span>
+            </label>
+            <label class="badge-option">
+              <input type="radio" name="p-badge" value="Sale" />
+              <span class="badge-option__label">Sale</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Price + Stock + Sort -->
+      <div class="form-row--3" style="display:grid; gap:1rem; margin-bottom:1.5rem;">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="p-price">Price ($)</label>
+          <input class="form-input" id="p-price" type="number" min="0" placeholder="85" />
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="p-stock">Stock Qty</label>
+          <input class="form-input" id="p-stock" type="number" min="0" placeholder="50" />
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label" for="p-sort">Sort Order</label>
+          <input class="form-input" id="p-sort" type="number" min="0" placeholder="1" />
+        </div>
+      </div>
+
+      <!-- Sold Out toggle -->
+      <div class="form-group">
+        <label class="form-toggle">
+          <input type="checkbox" id="p-soldout" />
+          <span class="form-toggle__track"></span>
+          <span class="form-toggle__label">Sold Out</span>
+        </label>
+      </div>
+
+      <!-- Sizes -->
+      <div class="form-group">
+        <label class="form-label">Available Sizes</label>
+        <div class="sizes-grid" id="p-sizes">
+          <label class="size-check"><input type="checkbox" value="XS" /><span class="size-check__box">XS</span></label>
+          <label class="size-check"><input type="checkbox" value="S" checked /><span class="size-check__box">S</span></label>
+          <label class="size-check"><input type="checkbox" value="M" checked /><span class="size-check__box">M</span></label>
+          <label class="size-check"><input type="checkbox" value="L" checked /><span class="size-check__box">L</span></label>
+          <label class="size-check"><input type="checkbox" value="XL" checked /><span class="size-check__box">XL</span></label>
+          <label class="size-check"><input type="checkbox" value="2XL" checked /><span class="size-check__box">2XL</span></label>
+          <label class="size-check"><input type="checkbox" value="3XL" /><span class="size-check__box">3XL</span></label>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="form-group">
+        <label class="form-label" for="p-description">Description</label>
+        <textarea class="form-textarea" id="p-description" placeholder="Premium quality garment from the AMR Reality collection..."></textarea>
+      </div>
+
+      <!-- Details -->
+      <div class="form-group">
+        <label class="form-label">Details</label>
+        <div class="details-list" id="p-details">
+          <!-- Rendered by JS -->
+        </div>
+        <button class="detail-add" id="add-detail-btn" type="button">+ Add Detail</button>
+      </div>
+
+      <!-- Delivery info -->
+      <div class="form-group">
+        <label class="form-label" for="p-delivery">Delivery &amp; Returns</label>
+        <textarea class="form-textarea" id="p-delivery" placeholder="Free shipping on orders over $120 CAD..."></textarea>
+      </div>
+
+      <!-- Images -->
+      <div class="form-group">
+        <label class="form-label">Product Images</label>
+        <div class="image-upload" id="image-upload-zone">
+          <input type="file" id="image-file-input" accept="image/jpeg,image/png,image/webp" multiple />
+          <p class="image-upload__text">Click or drag images here</p>
+          <p class="image-upload__sub">JPG, PNG, WebP — Max 5MB each</p>
+        </div>
+        <div class="image-preview-grid" id="image-preview-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Rating (read only) -->
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="p-rating">Rating</label>
+          <input class="form-input" id="p-rating" type="number" step="0.1" min="0" max="5" placeholder="4.5" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="p-review-count">Review Count</label>
+          <input class="form-input" id="p-review-count" type="number" min="0" placeholder="0" readonly />
+        </div>
+      </div>
+
+      <!-- Reviews -->
+      <div class="form-group">
+        <label class="form-label">Reviews</label>
+        <div class="review-list" id="p-reviews">
+          <!-- Rendered by JS -->
+        </div>
+        <button class="detail-add" id="add-review-btn" type="button" style="margin-top:0.5rem">+ Add Review</button>
+      </div>
+
+    </div>
+    <div class="modal__footer">
+      <div class="modal__footer-left">
+        <button class="btn btn--danger btn--small" id="delete-product-btn" style="display:none">Delete</button>
+      </div>
+      <div class="modal__footer-right">
+        <button class="btn btn--outline" id="cancel-product-btn">Cancel</button>
+        <button class="btn btn--gold" id="save-product-btn">
+          <span class="loading-spinner" id="save-spinner" style="display:none"></span>
+          Save Product
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ SCRIPTS ═══ -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="admin.js"></script>
+
+</body>
+</html>
