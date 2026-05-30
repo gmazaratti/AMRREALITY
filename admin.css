@@ -48,11 +48,14 @@ img { display:block; max-width:100%; }
    LOGIN SCREEN
    ════════════════════════════════ */
 .login-screen {
-  min-height:100vh;
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  z-index:9999;
   display:flex;
   align-items:center;
   justify-content:center;
   padding:2rem;
+  background: var(--bg);
 }
 
 .login-card {
@@ -144,9 +147,10 @@ img { display:block; max-width:100%; }
 .admin-app {
   display:none;
   min-height:100vh;
+  visibility:hidden;
 }
 
-.admin-app.visible { display:block; }
+.admin-app.visible { display:block; visibility:visible; }
 
 /* Top bar */
 .admin-topbar {
@@ -455,9 +459,10 @@ img { display:block; max-width:100%; }
   flex-direction:column;
   transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow:hidden;
+  visibility:hidden;
 }
 
-.modal.open { right:0; }
+.modal.open { right:0; visibility:visible; }
 
 .modal__header {
   display:flex;

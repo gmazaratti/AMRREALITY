@@ -70,53 +70,46 @@
   }
 
   // ═══════════════════════════════
-  //  AUTH
+  //  AUTH (hardcoded credentials)
   // ═══════════════════════════════
-  async function checkSession() {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      showApp(session.user);
-    } else {
-      loginScreen.style.display = '';
-      adminApp.classList.remove('visible');
+  var ADMIN_USER = 'AMRREALITY';
+  var ADMIN_PASS = 'MerchSale99!';
+
+  function checkSession() {
+    if (sessionStorage.getItem('amr_admin_auth') === 'true') {
+      showApp();
     }
   }
 
-  function showApp(user) {
+  function showApp() {
     loginScreen.style.display = 'none';
     adminApp.classList.add('visible');
-    userEmail.textContent = user.email;
+    userEmail.textContent = ADMIN_USER;
+    sessionStorage.setItem('amr_admin_auth', 'true');
     loadProducts();
   }
 
-  loginForm.addEventListener('submit', async function (e) {
+  loginForm.addEventListener('submit', function (e) {
     e.preventDefault();
     loginError.textContent = '';
     loginBtn.disabled = true;
     loginBtn.textContent = 'Signing in...';
 
-    const email = document.getElementById('login-email').value;
-    const password = document.getElementById('login-password').value;
+    var username = document.getElementById('login-email').value;
+    var password = document.getElementById('login-password').value;
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
-    });
-
-    if (error) {
-      loginError.textContent = error.message;
-      loginBtn.disabled = false;
-      loginBtn.textContent = 'Sign In';
-      return;
+    if (username === ADMIN_USER && password === ADMIN_PASS) {
+      showApp();
+    } else {
+      loginError.textContent = 'Invalid username or password';
     }
 
-    showApp(data.user);
     loginBtn.disabled = false;
     loginBtn.textContent = 'Sign In';
   });
 
-  logoutBtn.addEventListener('click', async function () {
-    await supabase.auth.signOut();
+  logoutBtn.addEventListener('click', function () {
+    sessionStorage.removeItem('amr_admin_auth');
     loginScreen.style.display = '';
     adminApp.classList.remove('visible');
     toast('Logged out', 'info');
